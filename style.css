@@ -38,7 +38,6 @@ body {
   transition: all 0.3s ease;
   z-index: 1000;
   flex-shrink: 0;
-  overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
 
@@ -62,11 +61,14 @@ body {
 
 .logo-text { font-weight: 800; font-size: 1.3rem; letter-spacing: 1px; }
 
-.sidebar-nav { 
-  flex: 1; 
-  padding: 10px; 
-  min-height: 0; 
+.sidebar-nav{
+  flex: 1;
+  padding: 10px;
+  min-height: 0;
+  overflow-y: auto;                 /* ✅ nav bisa scroll */
+  -webkit-overflow-scrolling: touch;
 }
+
 
 
 .sidebar-item {
@@ -90,7 +92,8 @@ body {
   padding: 20px;
   padding-bottom: 30px;
   border-top: 1px solid rgba(255,255,255,0.05);
-  background: rgba(0,0,0,0.2);
+  background: rgba(0,0,0,0.25);
+  flex-shrink: 0;  
 }
 
 
