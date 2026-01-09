@@ -38,6 +38,8 @@ body {
   transition: all 0.3s ease;
   z-index: 1000;
   flex-shrink: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .sidebar-header {
@@ -60,7 +62,12 @@ body {
 
 .logo-text { font-weight: 800; font-size: 1.3rem; letter-spacing: 1px; }
 
-.sidebar-nav { flex: 1; padding: 10px; }
+.sidebar-nav { 
+  flex: 1; 
+  padding: 10px; 
+  min-height: 0; 
+}
+
 
 .sidebar-item {
   padding: 12px 20px;
@@ -81,9 +88,11 @@ body {
 /* --- ADMIN PROFILE --- */
 .auth-box {
   padding: 20px;
+  padding-bottom: 30px;
   border-top: 1px solid rgba(255,255,255,0.05);
   background: rgba(0,0,0,0.2);
 }
+
 
 .user-info { display: flex; align-items: center; gap: 12px; margin-bottom: 15px; }
 
@@ -385,7 +394,7 @@ input, select, textarea {
   .sidebar {
     position: fixed;
     left: -280px; /* Sembunyi di luar layar */
-    height: 100vh;
+    height: 100dvh;
     z-index: 1002;
     box-shadow: 10px 0 30px rgba(0,0,0,0.1);
   }
