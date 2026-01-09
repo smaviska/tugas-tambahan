@@ -1198,7 +1198,7 @@ window.downloadTugasAktif = async (type) => {
       body: [
         [
           {
-            content: `{${nomorLampiran}}`,
+            content: `${nomorLampiran}`,
             styles: { textColor: [0, 0, 0], fontStyle: "normal" },
           },
           ":",
@@ -1394,7 +1394,7 @@ window.printTable = (tableId, type) => {
 
         <table class="lampiran-meta">
           <tr>
-            <td style="width: 160px;"><strong>{${nomorLampiran}}</strong></td>
+            <td style="width: 160px;">${nomorLampiran}</td>
             <td style="width: 16px; text-align:center;">:</td>
             <td>Keputusan Kepala SMA Negeri 6 Surakarta</td>
           </tr>
