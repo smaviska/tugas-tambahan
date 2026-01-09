@@ -129,7 +129,7 @@ body {
 .box { background: var(--white); padding: 30px; border-radius: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
 
 /* --- TABLES & ACTIONS --- */
-.table-container { margin-top: 20px; border-radius: 15px; overflow: hidden; border: 1px solid #f1f5f9; }
+.table-container { margin-top: 20px; border-radius: 15px; overflow-x: auto; overflow-y: hidden; border: 1px solid #f1f5f9; -webkit-overflow-scrolling: touch; }
 table { width: 100%; border-collapse: collapse; }
 th { background: #f8fafc; color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; padding: 18px; text-align: left; }
 td { padding: 18px; border-bottom: 1px solid #f1f5f9; font-size: 0.95rem; vertical-align: middle; }
@@ -470,3 +470,41 @@ input, select, textarea {
   }
 }
 
+
+
+/* --- MOBILE: IDENTITAS FORM & TABLE SCROLL --- */
+@media (max-width: 768px) {
+  /* Identitas view (2 kolom -> 1 kolom) */
+  #viewIdentitas {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  /* Form edit identitas (2 kolom -> 1 kolom) */
+  #formIdentitas .form-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  #formIdentitas .form-grid textarea,
+  #formIdentitas .form-grid .btn-save {
+    grid-column: span 1 !important;
+  }
+
+  #formIdentitas .form-actions {
+    grid-column: span 1 !important;
+    flex-direction: column;
+  }
+
+  #formIdentitas .form-actions button {
+    width: 100%;
+  }
+
+  /* Table: bisa digeser kiri-kanan di HP */
+  .table-container table {
+    min-width: 680px; /* memicu horizontal scroll saat layar sempit */
+  }
+
+  th, td {
+    padding: 12px;
+  }
+}
