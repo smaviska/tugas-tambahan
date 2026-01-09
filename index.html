@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SITUTAM | Sistem Informasi Tugas Guru</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+
+    <button class="mobile-menu-btn" id="mobileMenuBtn"><i class="fas fa-bars"></i></button>
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo-icon"><i class="fas fa-graduation-cap"></i></div>
+            <div class="logo-text">SIM-TUGAS</div>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="sidebar-item active" onclick="showPage('dashboard')"><i class="fas fa-home"></i>
+                <span>Dashboard</span></div>
+            <div class="sidebar-item" onclick="showPage('identitas')"><i class="fas fa-id-card"></i>
+                <span>Identitas</span></div>
+            <div class="sidebar-item" onclick="showPage('dataGuru')"><i class="fas fa-user-tie"></i> <span>Data
+                    Guru</span></div>
+            <div class="sidebar-item" onclick="showPage('manajemenLampiran')"><i class="fas fa-folder-plus"></i>
+                <span>Daftar Lampiran</span></div>
+            <div class="sidebar-item" onclick="showPage('daftarTugas')"><i class="fas fa-tasks"></i> <span>Tugas
+                    Tambahan</span></div>
+            <div class="sidebar-item" onclick="showPage('rekap')"><i class="fas fa-file-alt"></i> <span>Rekap
+                    Akhir</span></div>
+        </nav>
+        <div class="auth-box">
+
+            <div id="loginForm" class="login-container">
+                <div class="login-header">
+                    <h4>Akses Admin</h4>
+                    <p>Silakan masuk ke akun Anda</p>
+                </div>
+
+                <div class="input-group-auth">
+                    <label for="email"><i class="fas fa-envelope"></i> Email</label>
+                    <input id="email" type="email" placeholder="contoh@gmail.com">
+                </div>
+
+                <div class="input-group-auth">
+                    <label for="password"><i class="fas fa-lock"></i> Password</label>
+                    <input id="password" type="password" placeholder="••••••••">
+                </div>
+
+                <button id="btnLogin" class="btn-login-new">
+                    <span>Masuk</span>
+                    <i class="fas fa-sign-in-alt"></i>
+                </button>
+
+                <div class="login-footer">
+                    <i class="fas fa-info-circle"></i> Gunakan akun yang terdaftar
+                </div>
+            </div>
+
+            <div id="userProfile" class="hidden">
+                <div class="user-info">
+                    <div class="user-avatar"><i class="fas fa-user-shield"></i></div>
+                    <div class="user-details">
+                        <span class="user-status">Online</span>
+                        <span id="loginInfo" class="user-email"></span>
+                    </div>
+                </div>
+                <button id="btnLogout" class="btn-logout">Keluar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <header class="main-header">
+            <h2 id="pageTitle">Dashboard</h2>
+            <div class="date-now" id="currentDate"></div>
+        </header>
+
+        <section id="page-dashboard" class="page-content">
+            <div class="box">
+                <div class="welcome-card">
+                    <div class="welcome-text">
+                        <h3>Selamat Datang</h3>
+                        <p>Sistem Manajemen Tugas Tambahan Guru.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="page-identitas" class="page-content hidden">
+            <div class="box">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3>Identitas Surat & Kepala Sekolah</h3>
+                    <button id="btnEditIdentitas" class="btn-primary hidden" onclick="window.toggleEditIdentitas(true)">
+                        <i class="fas fa-edit"></i> Edit Identitas
+                    </button>
+                </div>
+
+                <div id="viewIdentitas" class="form-grid" style="grid-template-columns: 1fr 1fr; gap: 30px;">
+                    <div>
+                        <h4 style="border-bottom: 2px solid var(--bg-main); padding-bottom: 10px;">Identitas SK</h4>
+                        <p><strong>Nomor SK:</strong> <span id="valNomorSK">-</span></p>
+                        <p><strong>Tanggal SK:</strong> <span id="valTanggalSK">-</span></p>
+                        <p><strong>Tentang:</strong> <span id="valTentangSK">-</span></p>
+                    </div>
+                    <div>
+                        <h4 style="border-bottom: 2px solid var(--bg-main); padding-bottom: 10px;">Identitas Kepala
+                            Sekolah</h4>
+                        <p><strong>Nama:</strong> <span id="valNamaKepsek">-</span></p>
+                        <p><strong>Pangkat/Gol:</strong> <span id="valGolKepsek">-</span></p>
+                        <p><strong>NIP:</strong> <span id="valNipKepsek">-</span></p>
+                    </div>
+                </div>
+
+                <div id="formIdentitas" class="hidden entry-form" style="margin-top: 20px;">
+                    <h4>Form Edit Identitas</h4>
+                    <div class="form-grid">
+                        <input id="inNomorSK" placeholder="Nomor SK">
+                        <input id="inTanggalSK" type="date">
+                        <textarea id="inTentangSK" placeholder="Tentang SK" style="grid-column: span 2;"></textarea>
+                        <input id="inNamaKepsek" placeholder="Nama Kepala Sekolah">
+                        <input id="inGolKepsek" placeholder="Pangkat / Golongan">
+                        <input id="inNipKepsek" placeholder="NIP Kepala Sekolah">
+                        <div style="grid-column: span 2; display: flex; gap: 10px;">
+                            <button class="btn-save" style="flex: 1;" onclick="simpanIdentitas()">Simpan
+                                Perubahan</button>
+                            <button class="btn-danger" style="padding: 14px;"
+                                onclick="window.toggleEditIdentitas(false)">Batal</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="page-dataGuru" class="page-content hidden">
+            <div class="box">
+                <h3>Manajemen Guru</h3>
+                <div id="formGuru" class="hidden">
+                    <div class="input-row">
+                        <input id="guruNama" placeholder="Nama Guru">
+                        <input id="guruNip" placeholder="NIP">
+                        <button class="btn-primary" onclick="tambahGuru()">Tambah</button>
+                    </div>
+
+                    <div class="import-row">
+                        <button class="btn-success" onclick="downloadTemplateGuru()">
+                            <i class="fas fa-file-excel"></i> Download Template
+                        </button>
+
+                        <input id="importGuruFile" type="file" accept=".xlsx,.xls" class="hidden">
+
+                        <button class="btn-primary btn-muted" onclick="window.openImportGuru()">
+                            <i class="fas fa-upload"></i> Import Excel
+                        </button>
+                    </div>
+
+                    <div class="import-hint">
+                        Format kolom: <strong>Nama</strong>, <strong>NIP</strong> (baris pertama sebagai header).
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nama</th>
+                                <th>NIP</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelGuru"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="page-manajemenLampiran" class="page-content hidden">
+            <div class="box">
+                <h3>Manajemen Lampiran</h3>
+                <div id="importLampiranControls" class="hidden" style="display:flex; gap:10px; margin: 12px 0 18px; flex-wrap: wrap;">
+                    <button class="btn-success" onclick="downloadTemplateLampiran()"><i class="fas fa-download"></i> Template Excel</button>
+                    <button class="btn-primary" style="background:#64748b;" onclick="document.getElementById('fileImportLampiran').click()">
+                        <i class="fas fa-file-import"></i> Import Excel
+                    </button>
+                    <input id="fileImportLampiran" type="file" accept=".xlsx,.xls" style="display:none" onchange="importLampiranExcel(event)">
+                </div>
+
+                <div id="formLampiran" class="hidden">
+                    <div class="input-row">
+                        <input id="lampNama" placeholder="Nama Lampiran Baru (Contoh: Wakil Kepala Sekolah)">
+                        <button class="btn-primary" onclick="tambahLampiran()">Buat Lampiran</button>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Nomor Lampiran</th>
+                                <th>Nama Lampiran</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelDaftarLampiran"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+
+        <section id="page-daftarTugas" class="page-content hidden">
+            <div class="box">
+
+                <div class="download-buttons" style="display: flex; gap: 10px;">
+                    <button class="btn-success" onclick="downloadTugasAktif('excel')"><i class="fas fa-file-excel"></i>
+                        Excel</button>
+                    <button class="btn-danger" onclick="downloadTugasAktif('pdf')"><i class="fas fa-file-pdf"></i>
+                        PDF</button>
+                    <button class="btn-success" onclick="downloadTemplateTugasAktif()"><i class="fas fa-download"></i>
+                        Template Excel</button>
+                    <button id="btnImportTugas" class="btn-primary" style="background:#64748b;"
+                        onclick="document.getElementById('fileImportTugas').click()">
+                        <i class="fas fa-file-import"></i> Import Excel</button>
+                    <input id="fileImportTugas" type="file" accept=".xlsx,.xls" style="display:none" onchange="importTugasAktifExcel(event)">
+
+                    <button class="btn-primary" style="background: #64748b;"
+                        onclick="window.printTable('tabelIsiMain', 'tugas')">
+                        <i class="fas fa-print"></i> Cetak
+                    </button>
+                </div>
+
+
+                <div class="select-group"><label>Pilih Lampiran:</label><select id="lampiranSelect"
+                        onchange="gantiLampiran()"></select></div>
+
+                <div id="wrapperAksiTugas" class="hidden" style="margin-top:20px;">
+                    <button class="btn-primary" onclick="window.toggleFormTugas(true)"><i
+                            class="fas fa-plus-circle"></i> Tambah
+                        Data Tugas</button>
+                </div>
+
+                <div id="formIsi" class="hidden entry-form" style="margin-top:20px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                        <h4>Input Detail Tugas</h4>
+                        <button onclick="window.toggleFormTugas(false)" class="btn-close-form"><i
+                                class="fas fa-times"></i>
+                            Tutup</button>
+                    </div>
+                    <div class="form-grid">
+                        <select id="guruSelect" onchange="isiNip()"></select>
+                        <input id="nipAuto" readonly class="readonly-input" placeholder="NIP Otomatis">
+                        <textarea id="tugasText" placeholder="Rincian tugas..."></textarea>
+                        <button class="btn-save" onclick="tambahIsi()"><i class="fas fa-save"></i> Simpan Ke
+                            Lampiran</button>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table id="tabelIsiMain">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Nama</th>
+                                <th>NIP</th>
+                                <th>Tugas</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelIsi"></tbody>
+                    </table>
+                </div>
+
+               
+            </div>
+        </section>
+
+        <section id="page-rekap" class="page-content hidden">
+            <div class="box">
+
+                <div class="download-buttons" style="display: flex; gap: 10px;">
+                    <button class="btn-success" onclick="downloadExcel('tabelRekapMain', 'Rekap_Tugas_Guru')"><i
+                            class="fas fa-file-excel"></i> Excel</button>
+                    <button class="btn-danger" onclick="downloadPDF('tabelRekapMain', 'Rekap_Tugas_Guru')"><i
+                            class="fas fa-file-pdf"></i> PDF</button>
+                    <button class="btn-primary" style="background: #64748b;"
+                        onclick="window.printTable('tabelRekapMain', 'rekap')">
+                        <i class="fas fa-print"></i> Cetak
+                    </button>
+                </div>
+                <div class="table-container">
+                    <table id="tabelRekapMain">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Nama</th>
+                                <th>NIP</th>
+                                <th>Tugas</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelRekap"></tbody>
+                    </table>
+                </div>
+
+                <div class="ttd-kepsek">
+                    <div>Surakarta, <span id="ttdTanggal">-</span></div>
+                    <div style="margin-top: 10px;">Kepala Sekolah</div>
+
+                    <div class="nama"><span id="ttdNama">-</span></div>
+                    <div><span id="ttdGol">-</span></div>
+                    <div>NIP. <span id="ttdNip">-</span></div>
+                </div>
+
+            </div>
+        </section>
+           <footer class="app-footer">
+  © 2026 <strong>Powered By SantMedia</strong>
+    <div id="overlay" class="hidden modal-overlay"></div>
+    </div>
+      
+
+    <div id="formEditGuru" class="modal hidden">
+        <h4>Edit Profil Guru</h4>
+        <input type="hidden" id="editGuruId">
+        <div class="modal-body">
+            <input id="editGuruNama" placeholder="Nama Guru">
+            <input id="editGuruNip" placeholder="NIP">
+        </div>
+        <div class="modal-btns">
+            <button class="btn-primary" onclick="simpanEditGuru()">Update</button>
+            <button class="btn-danger" onclick="batalEditGuru()">Batal</button>
+        </div>
+    </div>
+
+    <div id="formEditLampiran" class="modal hidden">
+        <h4>Edit Nama Lampiran</h4>
+        <input type="hidden" id="editLampId">
+        <div class="modal-body">
+            <input id="editLampNama" placeholder="Nama Lampiran">
+        </div>
+        <div class="modal-btns">
+            <button class="btn-primary" onclick="simpanEditLampiran()">Update</button>
+            <button class="btn-danger" onclick="batalEditLampiran()">Batal</button>
+        </div>
+    </div>
+
+    <div id="formEditIsi" class="modal hidden">
+        <h4>Edit Rincian Tugas</h4>
+        <input type="hidden" id="editIsiId">
+        <div class="modal-body">
+            <select id="editIsiGuruSelect"></select>
+            <textarea id="editIsiTugasText" rows="4"></textarea>
+        </div>
+        <div class="modal-btns">
+            <button class="btn-primary" onclick="simpanEditIsi()">Simpan Perubahan</button>
+            <button class="btn-danger" onclick="batalEditIsi()">Batal</button>
+        </div>
+    </div>
+
+    <script type="module" src="script.js"></script>
+   
+</footer>
+
+</body>
+
+</html>
