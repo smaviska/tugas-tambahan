@@ -309,6 +309,57 @@ if (btnLoginEl)
 const btnLogoutEl = document.getElementById("btnLogout");
 if (btnLogoutEl) btnLogoutEl.onclick = () => signOut(auth);
 
+const btnToggleLogin = document.getElementById("btnToggleLogin");
+const loginPanel = document.getElementById("loginPanel");
+
+if (btnToggleLogin && loginPanel) {
+  btnToggleLogin.onclick = () => {
+    loginPanel.classList.toggle("active");
+  };
+}
+
+// === Auto-hide login panel jika klik di luar area form ===
+(function setupLoginAutoHide() {
+  const btnToggleLogin = document.getElementById("btnToggleLogin");
+  const loginPanel = document.getElementById("loginPanel");
+  const loginForm = document.getElementById("loginForm"); // container login di sidebar
+
+  if (!btnToggleLogin || !loginPanel) return;
+
+  const closePanel = () => loginPanel.classList.remove("active");
+
+  // Klik di luar panel/form -> tutup
+  document.addEventListener("click", (e) => {
+    // hanya bekerja jika panel sedang terbuka
+    if (!loginPanel.classList.contains("active")) return;
+
+    const target = e.target;
+
+    // jika klik di tombol toggle atau di dalam panel/form, jangan tutup
+    const clickedToggle = btnToggleLogin.contains(target);
+    const clickedInsidePanel = loginPanel.contains(target);
+    const clickedInsideLoginForm = loginForm
+      ? loginForm.contains(target)
+      : false;
+
+    if (clickedToggle || clickedInsidePanel || clickedInsideLoginForm) return;
+
+    // selain itu: tutup panel
+    closePanel();
+  });
+
+  // Opsional: tekan ESC juga menutup
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closePanel();
+  });
+
+  // Opsional: saat sidebar overlay (mobile) diklik, pastikan panel ikut tertutup
+  const overlayEl = document.getElementById("sidebarOverlay");
+  if (overlayEl) {
+    overlayEl.addEventListener("click", () => closePanel());
+  }
+})();
+
 async function refreshData() {
   await loadGuru();
   loadLampiran();
@@ -1206,7 +1257,7 @@ window.downloadTugasAktif = async (type) => {
         ],
         ["Nomor", ":", nomorSK || "-"],
         ["Tanggal", ":", tanggalSK || "-"],
-        ["Tentang", ":", tentangSK || "-"],
+        ["Tentang", ":", namaLampiran || "-"],
       ],
       columnStyles: {
         0: { cellWidth: 35 },
@@ -1410,7 +1461,7 @@ window.printTable = (tableId, type) => {
           </tr>
           <tr>
             <td>Tentang</td><td style="text-align:center;">:</td><td>${escapeHtml(
-              tentangSK
+              namaLampiran
             )}</td>
           </tr>
         </table>
