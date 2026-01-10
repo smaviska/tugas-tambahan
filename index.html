@@ -26,13 +26,16 @@
         </div>
         <nav class="sidebar-nav">
             <div class="sidebar-item active" onclick="showPage('dashboard')"><i class="fas fa-home"></i>
-                <span>Dashboard</span></div>
+                <span>Dashboard</span>
+            </div>
             <div class="sidebar-item" onclick="showPage('identitas')"><i class="fas fa-id-card"></i>
-                <span>Identitas</span></div>
+                <span>Identitas</span>
+            </div>
             <div class="sidebar-item" onclick="showPage('dataGuru')"><i class="fas fa-user-tie"></i> <span>Data
                     Guru</span></div>
             <div class="sidebar-item" onclick="showPage('manajemenLampiran')"><i class="fas fa-folder-plus"></i>
-                <span>Daftar Lampiran</span></div>
+                <span>Daftar Lampiran</span>
+            </div>
             <div class="sidebar-item" onclick="showPage('daftarTugas')"><i class="fas fa-tasks"></i> <span>Tugas
                     Tambahan</span></div>
             <div class="sidebar-item" onclick="showPage('rekap')"><i class="fas fa-file-alt"></i> <span>Rekap
@@ -41,30 +44,40 @@
         <div class="auth-box">
 
             <div id="loginForm" class="login-container">
-                <div class="login-header">
-                    <h4>Akses Admin</h4>
-                    <p>Silakan masuk ke akun Anda</p>
-                </div>
+  <!-- Tombol ringkas -->
+  <button id="btnToggleLogin" class="btn-login-toggle" type="button">
+    <i class="fas fa-sign-in-alt"></i>
+    <span>Masuk Admin</span>
+  </button>
 
-                <div class="input-group-auth">
-                    <label for="email"><i class="fas fa-envelope"></i> Email</label>
-                    <input id="email" type="email" placeholder="contoh@gmail.com">
-                </div>
+  <!-- Panel form (awal: tertutup) -->
+  <div id="loginPanel" class="login-panel">
+    <div class="login-header">
+      <h4>Akses Admin</h4>
+      <p>Silakan masuk ke akun Anda</p>
+    </div>
 
-                <div class="input-group-auth">
-                    <label for="password"><i class="fas fa-lock"></i> Password</label>
-                    <input id="password" type="password" placeholder="••••••••">
-                </div>
+    <div class="input-group-auth">
+      <label for="email"><i class="fas fa-envelope"></i> Email</label>
+      <input id="email" type="email" placeholder="contoh@gmail.com">
+    </div>
 
-                <button id="btnLogin" class="btn-login-new">
-                    <span>Masuk</span>
-                    <i class="fas fa-sign-in-alt"></i>
-                </button>
+    <div class="input-group-auth">
+      <label for="password"><i class="fas fa-lock"></i> Password</label>
+      <input id="password" type="password" placeholder="••••••••">
+    </div>
 
-                <div class="login-footer">
-                    <i class="fas fa-info-circle"></i> Gunakan akun yang terdaftar
-                </div>
-            </div>
+    <button id="btnLogin" class="btn-login-new">
+      <span>Masuk</span>
+      <i class="fas fa-sign-in-alt"></i>
+    </button>
+
+    <div class="login-footer">
+      <i class="fas fa-info-circle"></i> Gunakan akun yang terdaftar
+    </div>
+  </div>
+</div>
+
 
             <div id="userProfile" class="hidden">
                 <div class="user-info">
@@ -90,7 +103,10 @@
                 <div class="welcome-card">
                     <div class="welcome-text">
                         <h3>Selamat Datang</h3>
-                        <p>SINTA (Sistem Informasi Tugas Tambahan) merupakan aplikasi yang digunakan untuk memudahkan pengelolaan, pembuatan, dan distribusi tugas tambahan bagi guru dan karyawan secara terstruktur dan terintegrasi. Aplikasi ini mendukung proses pencatatan, pembaruan data, rekapitulasi, serta penyusunan dokumen administrasi sekolah secara tertib dan efisien.</p>
+                        <p>SINTA (Sistem Informasi Tugas Tambahan) merupakan aplikasi yang digunakan untuk memudahkan
+                            pengelolaan, pembuatan, dan distribusi tugas tambahan bagi guru dan karyawan secara
+                            terstruktur dan terintegrasi. Aplikasi ini mendukung proses pencatatan, pembaruan data,
+                            rekapitulasi, serta penyusunan dokumen administrasi sekolah secara tertib dan efisien.</p>
                     </div>
                 </div>
             </div>
@@ -110,7 +126,7 @@
                         <h4 style="border-bottom: 2px solid var(--bg-main); padding-bottom: 10px;">Identitas SK</h4>
                         <p><strong>Nomor SK:</strong> <span id="valNomorSK">-</span></p>
                         <p><strong>Tanggal SK:</strong> <span id="valTanggalSK">-</span></p>
-                        <p><strong>Tentang:</strong> <span id="valTentangSK">-</span></p>
+                        <!-- <p><strong>Tentang:</strong> <span id="valTentangSK">-</span></p> -->
                     </div>
                     <div>
                         <h4 style="border-bottom: 2px solid var(--bg-main); padding-bottom: 10px;">Identitas Kepala
@@ -126,7 +142,7 @@
                     <div class="form-grid">
                         <input id="inNomorSK" placeholder="Nomor SK">
                         <input id="inTanggalSK" type="date">
-                        <textarea id="inTentangSK" placeholder="Tentang SK" style="grid-column: span 2;"></textarea>
+                        <!-- <textarea id="inTentangSK" placeholder="Tentang SK" style="grid-column: span 2;"></textarea> -->
                         <input id="inNamaKepsek" placeholder="Nama Kepala Sekolah">
                         <input id="inGolKepsek" placeholder="Pangkat / Golongan">
                         <input id="inNipKepsek" placeholder="NIP Kepala Sekolah">
@@ -185,12 +201,16 @@
         <section id="page-manajemenLampiran" class="page-content hidden">
             <div class="box">
                 <h3>Manajemen Lampiran</h3>
-                <div id="importLampiranControls" class="hidden" style="display:flex; gap:10px; margin: 12px 0 18px; flex-wrap: wrap;">
-                    <button class="btn-success" onclick="downloadTemplateLampiran()"><i class="fas fa-download"></i> Template Excel</button>
-                    <button class="btn-primary" style="background:#64748b;" onclick="document.getElementById('fileImportLampiran').click()">
+                <div id="importLampiranControls" class="hidden"
+                    style="display:flex; gap:10px; margin: 12px 0 18px; flex-wrap: wrap;">
+                    <button class="btn-success" onclick="downloadTemplateLampiran()"><i class="fas fa-download"></i>
+                        Template Excel</button>
+                    <button class="btn-primary" style="background:#64748b;"
+                        onclick="document.getElementById('fileImportLampiran').click()">
                         <i class="fas fa-file-import"></i> Import Excel
                     </button>
-                    <input id="fileImportLampiran" type="file" accept=".xlsx,.xls" style="display:none" onchange="importLampiranExcel(event)">
+                    <input id="fileImportLampiran" type="file" accept=".xlsx,.xls" style="display:none"
+                        onchange="importLampiranExcel(event)">
                 </div>
 
                 <div id="formLampiran" class="hidden">
@@ -220,24 +240,38 @@
         <section id="page-daftarTugas" class="page-content hidden">
             <div class="box">
 
-                <div class="download-buttons" style="display: flex; gap: 10px;">
-                    <button class="btn-success" onclick="downloadTugasAktif('excel')"><i class="fas fa-file-excel"></i>
-                        Excel</button>
-                    <button class="btn-danger" onclick="downloadTugasAktif('pdf')"><i class="fas fa-file-pdf"></i>
-                        PDF</button>
-                    <button class="btn-success" onclick="downloadTemplateTugasAktif()"><i class="fas fa-download"></i>
-                        Template Excel</button>
-                    <button id="btnImportTugas" class="btn-primary" style="background:#64748b;"
-                        onclick="document.getElementById('fileImportTugas').click()">
-                        <i class="fas fa-file-import"></i> Import Excel</button>
-                    <input id="fileImportTugas" type="file" accept=".xlsx,.xls" style="display:none" onchange="importTugasAktifExcel(event)">
+                <div class="download-buttons">
+                    <div class="download-left">
+                        <button class="btn-success" onclick="downloadTugasAktif('excel')">
+                            <i class="fas fa-file-excel"></i> Excel
+                        </button>
 
-                    <button class="btn-primary" style="background: #64748b;"
-                        onclick="window.printTable('tabelIsiMain', 'tugas')">
-                        <i class="fas fa-print"></i> Cetak
-                    </button>
+                        <button class="btn-danger" onclick="downloadTugasAktif('pdf')">
+                            <i class="fas fa-file-pdf"></i> PDF
+                        </button>
+
+                        <button class="btn-primary" style="background:#64748b;"
+                            onclick="window.printTable('tabelIsiMain', 'tugas')">
+                            <i class="fas fa-print"></i> Cetak
+                        </button>
+                    </div>
+
+                    <div class="download-right">
+                        <button class="btn-success" onclick="downloadTemplateTugasAktif()">
+                            <i class="fas fa-download"></i> Template Excel
+                        </button>
+
+                        <button id="btnImportTugas" class="btn-primary" style="background:#64748b;"
+                            onclick="document.getElementById('fileImportTugas').click()">
+                            <i class="fas fa-file-import"></i> Import Excel
+                        </button>
+                    </div>
+
+                    <input id="fileImportTugas" type="file" accept=".xlsx,.xls" style="display:none"
+                        onchange="importTugasAktifExcel(event)">
                 </div>
 
+<br>
 
                 <div class="select-group"><label>Pilih Lampiran:</label><select id="lampiranSelect"
                         onchange="gantiLampiran()"></select></div>
@@ -279,14 +313,14 @@
                     </table>
                 </div>
 
-               
+
             </div>
         </section>
 
         <section id="page-rekap" class="page-content hidden">
             <div class="box">
 
-                <div class="download-buttons" style="display: flex; gap: 10px;">
+                <div class="download-left" style="display: flex; gap: 10px;">
                     <button class="btn-success" onclick="downloadExcel('tabelRekapMain', 'Rekap_Tugas_Guru')"><i
                             class="fas fa-file-excel"></i> Excel</button>
                     <button class="btn-danger" onclick="downloadPDF('tabelRekapMain', 'Rekap_Tugas_Guru')"><i
@@ -321,11 +355,11 @@
 
             </div>
         </section>
-           <footer class="app-footer">
-  © 2026 SINTA – Sistem Informasi Tugas Tambahan | Powered by <strong>SantMedia</strong>
-    <div id="overlay" class="hidden modal-overlay"></div>
+        <footer class="app-footer">
+            © 2026 SINTA – Sistem Informasi Tugas Tambahan | Powered by <strong>SantMedia</strong>
+            <div id="overlay" class="hidden modal-overlay"></div>
     </div>
-      
+
 
     <div id="formEditGuru" class="modal hidden">
         <h4>Edit Profil Guru</h4>
@@ -366,8 +400,8 @@
     </div>
 
     <script type="module" src="script.js"></script>
-   
-</footer>
+
+    </footer>
 
 </body>
 
