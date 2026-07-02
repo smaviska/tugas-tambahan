@@ -110,7 +110,7 @@ function renderIdentitasToUI() {
   setText("valNomorSK", identitasCache.nomorSK);
   setText(
     "valTanggalSK",
-    identitasCache.tanggalSK ? formatTanggalIndo(identitasCache.tanggalSK) : ""
+    identitasCache.tanggalSK ? formatTanggalIndo(identitasCache.tanggalSK) : "",
   );
   setText("valTentangSK", identitasCache.tentangSK);
   setText("valNamaKepsek", identitasCache.namaKepsek);
@@ -176,7 +176,7 @@ async function loadIdentitas() {
     // boleh gagal (misal rules), tetap lanjut
     console.warn(
       "Gagal load identitas dari Firestore (fallback localStorage).",
-      e
+      e,
     );
   }
 
@@ -211,10 +211,10 @@ window.simpanIdentitas = async () => {
   } catch (e) {
     console.warn(
       "Gagal simpan identitas ke Firestore (tetap tersimpan di perangkat).",
-      e
+      e,
     );
     alert(
-      "Identitas tersimpan di perangkat, tapi gagal sinkron ke server. Periksa aturan Firestore / koneksi."
+      "Identitas tersimpan di perangkat, tapi gagal sinkron ke server. Periksa aturan Firestore / koneksi.",
     );
   }
 
@@ -225,26 +225,51 @@ window.simpanIdentitas = async () => {
 /* ================= NAVIGASI & UI ================= */
 /* Update bagian NAVIGASI & UI */
 window.showPage = (id) => {
-  // Sembunyikan semua halaman
+  // 1. Sembunyikan semua halaman
   document.querySelectorAll(".page-content").forEach((p) => {
     p.classList.add("hidden");
   });
 
-  // Tampilkan halaman target
+  // 2. Tampilkan halaman target
   const targetPage = document.getElementById(`page-${id}`);
   if (targetPage) {
     targetPage.classList.remove("hidden");
   }
 
-  // Update status aktif sidebar
+  // 3. Update status aktif sidebar
   document.querySelectorAll(".sidebar-item").forEach((item) => {
     item.classList.remove("active");
-
     const onclickAttr = item.getAttribute("onclick");
     if (onclickAttr && onclickAttr.includes(`'${id}'`)) {
       item.classList.add("active");
     }
   });
+
+  // 4. Perbarui Judul Halaman secara Dinamis berdasarkan ID halaman
+  const pageTitleEl = document.getElementById("pageTitle");
+  if (pageTitleEl) {
+    // Mapping ID halaman ke Judul yang manusiawi
+    const titleMapping = {
+      dashboard:
+        '<i class="fas fa-home header-icon-title"></i> Dashboard Utama',
+      identitas:
+        '<i class="fas fa-id-card header-icon-title"></i> Identitas SK & Kepala Sekolah',
+      dataGuru:
+        '<i class="fas fa-user-tie header-icon-title"></i> Manajemen Data Guru',
+      manajemenLampiran:
+        '<i class="fas fa-folder-plus header-icon-title"></i> Daftar Lampiran Dokumen',
+      daftarTugas: '<i class="fas fa-tasks"></i> Rincian Tugas Tambahan',
+      rekap:
+        '<i class="fas fa-file-alt header-icon-title"></i> Rekapitulasi Akhir Penugasan',
+    };
+
+    // Berikan efek transisi memudar (fade) saat judul berganti
+    pageTitleEl.style.opacity = 0;
+    setTimeout(() => {
+      pageTitleEl.innerHTML = titleMapping[id] || id.toUpperCase();
+      pageTitleEl.style.opacity = 1;
+    }, 150);
+  }
 };
 
 const mobileBtn = document.getElementById("mobileMenuBtn");
@@ -304,7 +329,7 @@ const btnLoginEl = document.getElementById("btnLogin");
 if (btnLoginEl)
   btnLoginEl.onclick = () =>
     signInWithEmailAndPassword(auth, email.value, password.value).catch(() =>
-      alert("Login Gagal!")
+      alert("Login Gagal!"),
     );
 const btnLogoutEl = document.getElementById("btnLogout");
 if (btnLogoutEl) btnLogoutEl.onclick = () => signOut(auth);
@@ -400,13 +425,13 @@ async function loadGuru() {
     const na = String(a.data.nama || "").localeCompare(
       String(b.data.nama || ""),
       "id",
-      { sensitivity: "base" }
+      { sensitivity: "base" },
     );
     if (na !== 0) return na;
     return String(a.data.nip || "").localeCompare(
       String(b.data.nip || ""),
       "id",
-      { sensitivity: "base" }
+      { sensitivity: "base" },
     );
   });
 
@@ -468,7 +493,7 @@ window.simpanEditGuru = async () => {
 window.hapusGuru = async (id) => {
   if (
     confirm(
-      "Hapus guru ini? Tugas terkait akan tetap ada namun nama mungkin hilang."
+      "Hapus guru ini? Tugas terkait akan tetap ada namun nama mungkin hilang.",
     )
   ) {
     await deleteDoc(doc(db, "guru", id));
@@ -504,7 +529,7 @@ window.importGuruExcel = async (file) => {
   const existingNips = new Set(
     Object.values(guruMap)
       .map((g) => cleanNIP(g?.nip || ""))
-      .filter(Boolean)
+      .filter(Boolean),
   );
 
   const reader = new FileReader();
@@ -530,7 +555,7 @@ window.importGuruExcel = async (file) => {
 
       if (!namaKey || !nipKey) {
         return alert(
-          'Header tidak sesuai. Gunakan template dengan kolom "Nama" dan "NIP".'
+          'Header tidak sesuai. Gunakan template dengan kolom "Nama" dan "NIP".',
         );
       }
 
@@ -656,7 +681,7 @@ async function loadLampiran() {
 window.hapusLampiran = async (id) => {
   if (
     confirm(
-      "Hapus lampiran ini? Semua data tugas di dalamnya juga harus dihapus secara manual."
+      "Hapus lampiran ini? Semua data tugas di dalamnya juga harus dihapus secara manual.",
     )
   ) {
     await deleteDoc(doc(db, "lampiran", id));
@@ -694,12 +719,8 @@ async function loadIsi(lampId) {
     }
   });
 
-  rows.sort((a, b) => {
-    const as = a.sort || 0;
-    const bs = b.sort || 0;
-    if (as !== bs) return as - bs;
-    return String(a.tugas).localeCompare(String(b.tugas));
-  });
+  // Urutkan berdasarkan bobot field 'sort' dari terkecil ke terbesar
+  rows.sort((a, b) => a.sort - b.sort);
 
   let no = 1;
   for (const r of rows) {
@@ -708,18 +729,24 @@ async function loadIsi(lampId) {
       nip: "-",
     };
 
-    const aksi = auth.currentUser
+    const isAdmin = !!auth.currentUser;
+
+    // Handle drag hanya muncul jika user adalah Admin
+    const dragCol = isAdmin
+      ? `<td class="text-center" style="width: 40px;"><span class="drag-handle"><i class="fas fa-grip-vertical"></i></span></td>`
+      : `<td class="text-center" style="width: 40px;">-</td>`;
+
+    const aksi = isAdmin
       ? `<div class="action-buttons">
-            <button class="btn-primary" onclick="window.editIsi('${r.id}','${
-          r.guruId
-        }','${escapeHtml(r.tugas)}')"><i class="fas fa-edit"></i></button> 
-            <button class="btn-danger" onclick="window.hapusIsi('${
-              r.id
-            }')"><i class="fas fa-trash"></i></button>
-           </div>`
+            <button class="btn-primary" onclick="window.editIsi('${r.id}','${r.guruId}','${escapeHtml(r.tugas)}')"><i class="fas fa-edit"></i></button> 
+            <button class="btn-danger" onclick="window.hapusIsi('${r.id}')"><i class="fas fa-trash"></i></button>
+         </div>`
       : "-";
 
-    tIsi.innerHTML += `<tr>
+    // Membuat baris memiliki atribut khusus drag-and-drop
+    tIsi.innerHTML += `
+      <tr class="draggable-row" draggable="${isAdmin}" data-id="${r.id}">
+        ${dragCol}
         <td>${no++}</td> 
         <td>${escapeHtml(profilGuru.nama)}</td>
         <td><span class="nip-badge">${escapeHtml(profilGuru.nip)}</span></td>
@@ -727,16 +754,28 @@ async function loadIsi(lampId) {
         <td>${aksi}</td>
       </tr>`;
   }
+
+  if (auth.currentUser) {
+    initDragAndDrop();
+  }
 }
 
 window.tambahIsi = async () => {
-  if (!tugasText.value) return alert("Tugas kosong!");
+  const tugasTxtEl = document.getElementById("tugasText");
+  const lampiranSelEl = document.getElementById("lampiranSelect");
+  const guruSelEl = document.getElementById("guruSelect");
+
+  if (!tugasTxtEl.value) return alert("Tugas kosong!");
+
   await addDoc(collection(db, "tugas_tambahan"), {
-    lampiranId: document.getElementById("lampiranSelect").value,
-    guruId: document.getElementById("guruSelect").value,
-    tugas: tugasText.value,
+    lampiranId: lampiranSelEl.value,
+    guruId: guruSelEl.value,
+    tugas: tugasTxtEl.value,
+    // Menggunakan timestamp negatif agar data terbaru memiliki bobot angka terkecil (paling atas)
+    sort: -Date.now(),
   });
-  tugasText.value = "";
+
+  tugasTxtEl.value = "";
   window.toggleFormTugas(false);
   window.gantiLampiran();
   loadRekap();
@@ -809,8 +848,8 @@ async function loadRekap() {
       rawTugas.length === 0
         ? "-"
         : rawTugas.length === 1
-        ? rawTugas[0]
-        : rawTugas.map((txt, i) => `${i + 1}. ${txt}`).join("<br>");
+          ? rawTugas[0]
+          : rawTugas.map((txt, i) => `${i + 1}. ${txt}`).join("<br>");
 
     tRekap.innerHTML += `<tr><td>${no++}</td><td>${p.nama}</td><td>${
       p.nip
@@ -929,7 +968,7 @@ window.downloadTemplateTugasAktif = () => {
   XLSX.utils.book_append_sheet(wb, ws, "Tugas");
   XLSX.writeFile(
     wb,
-    `Template_Import_Tugas_${namaLampiran.replace(/\s+/g, "_")}.xlsx`
+    `Template_Import_Tugas_${namaLampiran.replace(/\s+/g, "_")}.xlsx`,
   );
 };
 
@@ -1007,7 +1046,7 @@ window.importTugasAktifExcel = async (event) => {
     loadRekap();
 
     alert(
-      `Import tugas selesai. Ditambahkan: ${added}. Dilewati (guru tidak ditemukan): ${skipped}.`
+      `Import tugas selesai. Ditambahkan: ${added}. Dilewati (guru tidak ditemukan): ${skipped}.`,
     );
   } catch (e) {
     console.error(e);
@@ -1093,13 +1132,13 @@ window.downloadPDF = async (tableId, fileName) => {
           "Jalan Mr. Sartono No. 30 Banjarsari, Kota Surakarta Kode Pos 57135",
           105,
           49,
-          { align: "center" }
+          { align: "center" },
         );
         doc.text(
           "Telp. (0271) 853209 | Email: info@sman6surakarta.sch.id",
           105,
           53,
-          { align: "center" }
+          { align: "center" },
         );
         doc.text("Laman: https://www.sman6surakarta.sch.id", 105, 57, {
           align: "center",
@@ -1119,13 +1158,13 @@ window.downloadPDF = async (tableId, fileName) => {
           "REKAPITULASI PENUGASAN GURU DALAM PROSES BELAJAR MENGAJAR,",
           105,
           judulY,
-          { align: "center" }
+          { align: "center" },
         );
         doc.text(
           "PRAKTEK BIMBINGAN DAN PENYULUHAN, TUGAS TAMBAHAN DAN",
           105,
           judulY + 5,
-          { align: "center" }
+          { align: "center" },
         );
         doc.text("TUGAS – TUGAS LAIN SEMESTER GASAL", 105, judulY + 10, {
           align: "center",
@@ -1215,7 +1254,7 @@ window.downloadTugasAktif = async (type) => {
       (tr) => {
         const tds = Array.from(tr.querySelectorAll("td")).slice(0, -1);
         return tds.map((td) => td.innerText.trim());
-      }
+      },
     );
 
     return { head: [headRow], body: bodyRows };
@@ -1359,6 +1398,94 @@ window.downloadTugasAktif = async (type) => {
   }
 };
 
+function initDragAndDrop() {
+  const tbody = document.getElementById("tabelIsi");
+  const rows = tbody.querySelectorAll(".draggable-row");
+  let dragSrcEl = null;
+
+  rows.forEach((row) => {
+    row.addEventListener("dragstart", function (e) {
+      dragSrcEl = this;
+      this.classList.add("dragging");
+      e.dataTransfer.effectAllowed = "move";
+    });
+
+    row.addEventListener("dragover", function (e) {
+      if (e.preventDefault) {
+        e.preventDefault();
+      }
+      this.classList.add("drag-over");
+      return false;
+    });
+
+    row.addEventListener("dragleave", function () {
+      this.classList.remove("drag-over");
+    });
+
+    row.addEventListener("drop", async function (e) {
+      if (e.stopPropagation) {
+        e.stopPropagation();
+      }
+
+      this.classList.remove("drag-over");
+
+      if (dragSrcEl !== this) {
+        // Tentukan posisi penempatan baris baru di DOM secara instan
+        const allRows = Array.from(tbody.querySelectorAll(".draggable-row"));
+        const srcIndex = allRows.indexOf(dragSrcEl);
+        const targetIndex = allRows.indexOf(this);
+
+        if (srcIndex < targetIndex) {
+          this.parentNode.insertBefore(dragSrcEl, this.nextSibling);
+        } else {
+          this.parentNode.insertBefore(dragSrcEl, this);
+        }
+
+        // Simpan urutan formasi baris baru ke Firebase Firestore
+        await simpanUrutanBaru();
+      }
+      return false;
+    });
+
+    row.addEventListener("dragend", function () {
+      rows.forEach((r) => {
+        r.classList.remove("dragging");
+        r.classList.remove("drag-over");
+      });
+      // Atur ulang penomoran baris "No" di UI secara langsung
+      updateNomorTabel();
+    });
+  });
+}
+
+// Fungsi pembantu memperbarui nomor baris tabel setelah di-drag
+function updateNomorTabel() {
+  const rows = document.querySelectorAll("#tabelIsi .draggable-row");
+  rows.forEach((row, index) => {
+    row.cells[1].innerText = index + 1;
+  });
+}
+
+// Fungsi menyimpan perubahan formasi urutan baris ke database Firestore
+async function simpanUrutanBaru() {
+  const rows = document.querySelectorAll("#tabelIsi .draggable-row");
+  let batch = writeBatch(db);
+
+  rows.forEach((row, index) => {
+    const docId = row.dataset.id;
+    const docRef = doc(db, "tugas_tambahan", docId);
+    // Menyusun nilai urutan konstan dari index terkecil ke terbesar
+    batch.update(docRef, { sort: index });
+  });
+
+  try {
+    await batch.commit();
+    // Refresh halaman rekap akhir agar sinkron dengan urutan baru
+    loadRekap();
+  } catch (err) {
+    console.error("Gagal memperbarui urutan baris di server: ", err);
+  }
+}
 /* ================= INIT ================= */
 document.getElementById("currentDate").innerText =
   new Date().toLocaleDateString("id-ID", {
@@ -1451,17 +1578,17 @@ window.printTable = (tableId, type) => {
           </tr>
           <tr>
             <td>Nomor</td><td style="text-align:center;">:</td><td>${escapeHtml(
-              nomorSK
+              nomorSK,
             )}</td>
           </tr>
           <tr>
             <td>Tanggal</td><td style="text-align:center;">:</td><td>${escapeHtml(
-              tanggalSK
+              tanggalSK,
             )}</td>
           </tr>
           <tr>
             <td>Tentang</td><td style="text-align:center;">:</td><td>${escapeHtml(
-              namaLampiran
+              namaLampiran,
             )}</td>
           </tr>
         </table>
@@ -1469,7 +1596,7 @@ window.printTable = (tableId, type) => {
     `;
 
     titleContent = `<div class="lampiran-title">${escapeHtml(
-      String(namaLampiran).toUpperCase()
+      String(namaLampiran).toUpperCase(),
     )}</div>`;
 
     // footer: TTD KS
