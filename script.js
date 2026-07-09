@@ -1232,7 +1232,8 @@ window.downloadTugasAktif = async (type) => {
   if (type === "excel") {
     // Untuk Excel, kita ambil tabel apa adanya dari DOM (user minta khusus header & ttd hanya untuk cetak/pdf)
     const table = document.getElementById("tabelIsiMain");
-    const wb = XLSX.utils.table_to_book(table, { sheet: "Sheet1" });
+    // Tambahkan raw: true agar angka panjang (NIP) dibaca sebagai teks
+    const wb = XLSX.utils.table_to_book(table, { sheet: "Sheet1", raw: true });
     XLSX.writeFile(wb, `${fileName}.xlsx`);
     return;
   }
