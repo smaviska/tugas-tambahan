@@ -863,7 +863,8 @@ async function loadRekap() {
 window.downloadExcel = (tableId, fileName) => {
   const table = document.getElementById(tableId);
   if (!table) return alert("Tabel tidak ditemukan");
-  const wb = XLSX.utils.table_to_book(table, { sheet: "Sheet1" });
+  // Tambahkan raw: true di sini juga
+  const wb = XLSX.utils.table_to_book(table, { sheet: "Sheet1", raw: true });
   XLSX.writeFile(wb, `${fileName}.xlsx`);
 };
 
