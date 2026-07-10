@@ -9,6 +9,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -31,26 +33,20 @@
             <div class="sidebar-item" onclick="showPage('identitas')"><i class="fas fa-id-card"></i>
                 <span>Identitas</span>
             </div>
-            <div class="sidebar-item" onclick="showPage('dataGuru')"><i class="fas fa-user-tie"></i> <span>Data
-                    Guru</span></div>
+            <div class="sidebar-item" onclick="showPage('dataGuru')"><i class="fas fa-user-tie"></i> <span>Data Guru</span></div>
             <div class="sidebar-item" onclick="showPage('manajemenLampiran')"><i class="fas fa-folder-plus"></i>
                 <span>Daftar Lampiran</span>
             </div>
-            <div class="sidebar-item" onclick="showPage('daftarTugas')"><i class="fas fa-tasks"></i> <span>Tugas
-                    Tambahan</span></div>
-            <div class="sidebar-item" onclick="showPage('rekap')"><i class="fas fa-file-alt"></i> <span>Rekap
-                    Akhir</span></div>
+            <div class="sidebar-item" onclick="showPage('daftarTugas')"><i class="fas fa-tasks"></i> <span>Tugas Tambahan</span></div>
+            <div class="sidebar-item" onclick="showPage('rekap')"><i class="fas fa-file-alt"></i> <span>Rekap Akhir</span></div>
         </nav>
         <div class="auth-box">
-
             <div id="loginForm" class="login-container">
-                <!-- Tombol ringkas -->
                 <button id="btnToggleLogin" class="btn-login-toggle" type="button">
                     <i class="fas fa-sign-in-alt"></i>
                     <span>Masuk Admin</span>
                 </button>
 
-                <!-- Panel form (awal: tertutup) -->
                 <div id="loginPanel" class="login-panel">
                     <div class="login-header">
                         <h4>Akses Admin</h4>
@@ -77,7 +73,6 @@
                     </div>
                 </div>
             </div>
-
 
             <div id="userProfile" class="hidden">
                 <div class="user-info">
@@ -118,16 +113,13 @@
 
         <section id="page-identitas" class="page-content hidden">
             <div class="box">
-                <!-- Baris Tombol Aksi Saja (Judul H3 Lama Sudah Dihapus) -->
                 <div style="display: flex; justify-content: flex-end; margin-bottom: 20px;">
                     <button id="btnEditIdentitas" class="btn-primary hidden" onclick="window.toggleEditIdentitas(true)">
                         <i class="fas fa-edit" style="margin-right: 6px;"></i> Edit Identitas
                     </button>
                 </div>
 
-                <!-- Mode View (Kartu Grid) -->
                 <div id="viewIdentitas" class="form-grid" style="grid-template-columns: 1fr 1fr; gap: 20px;">
-                    <!-- Kartu Identitas SK -->
                     <div class="identitas-card">
                         <div class="card-title">
                             <i class="fas fa-file-signature"></i>
@@ -145,7 +137,6 @@
                         </div>
                     </div>
 
-                    <!-- Kartu Identitas Kepala Sekolah -->
                     <div class="identitas-card">
                         <div class="card-title">
                             <i class="fas fa-user-tie"></i>
@@ -168,7 +159,6 @@
                     </div>
                 </div>
 
-                <!-- Mode Form Edit (Ikut Dipercantik) -->
                 <div id="formIdentitas" class="hidden entry-form" style="margin-top: 25px; border-radius: 16px; background: #f8fafc; padding: 25px;">
                     <h4 style="margin-top: 0; margin-bottom: 20px; font-weight: 700; color: #1e293b; display: flex; align-items: center; gap: 8px;">
                         <i class="fas fa-pen-to-square" style="color: var(--primary);"></i> Form Modifikasi Data
@@ -209,7 +199,6 @@
 
         <section id="page-dataGuru" class="page-content hidden">
             <div class="box">
-               
                 <div id="formGuru" class="hidden">
                     <div class="input-row">
                         <input id="guruNama" placeholder="Nama Guru">
@@ -221,18 +210,20 @@
                         <button class="btn-success" onclick="downloadTemplateGuru()">
                             <i class="fas fa-file-excel"></i> Download Template
                         </button>
-
                         <input id="importGuruFile" type="file" accept=".xlsx,.xls" class="hidden">
-
                         <button class="btn-primary btn-muted" onclick="window.openImportGuru()">
                             <i class="fas fa-upload"></i> Import Excel
                         </button>
                     </div>
-
                     <div class="import-hint">
                         Format kolom: <strong>Nama</strong>, <strong>NIP</strong> (baris pertama sebagai header).
                     </div>
                 </div>
+
+                <div class="search-box" style="margin-top: 20px; margin-bottom: 15px;">
+                    <input type="text" id="searchGuru" placeholder="Cari nama atau NIP guru..." onkeyup="filterTable('tabelGuru', this.value)" style="width: 100%; padding: 12px; border-radius: 10px; border: 1.5px solid #e2e8f0; outline: none; font-family: inherit;">
+                </div>
+
                 <div class="table-container">
                     <table>
                         <thead>
@@ -250,17 +241,12 @@
 
         <section id="page-manajemenLampiran" class="page-content hidden">
             <div class="box">
-                
-                <div id="importLampiranControls" class="hidden"
-                    style="display:flex; gap:10px; margin: 12px 0 18px; flex-wrap: wrap;">
-                    <button class="btn-success" onclick="downloadTemplateLampiran()"><i class="fas fa-download"></i>
-                        Template Excel</button>
-                    <button class="btn-primary" style="background:#64748b;"
-                        onclick="document.getElementById('fileImportLampiran').click()">
+                <div id="importLampiranControls" class="hidden" style="display:flex; gap:10px; margin: 12px 0 18px; flex-wrap: wrap;">
+                    <button class="btn-success" onclick="downloadTemplateLampiran()"><i class="fas fa-download"></i> Template Excel</button>
+                    <button class="btn-primary" style="background:#64748b;" onclick="document.getElementById('fileImportLampiran').click()">
                         <i class="fas fa-file-import"></i> Import Excel
                     </button>
-                    <input id="fileImportLampiran" type="file" accept=".xlsx,.xls" style="display:none"
-                        onchange="importLampiranExcel(event)">
+                    <input id="fileImportLampiran" type="file" accept=".xlsx,.xls" style="display:none" onchange="importLampiranExcel(event)">
                 </div>
 
                 <div id="formLampiran" class="hidden">
@@ -274,6 +260,7 @@
                     <table>
                         <thead>
                             <tr>
+                                <th style="width: 40px;"></th> 
                                 <th>No</th>
                                 <th>Nomor Lampiran</th>
                                 <th>Nama Lampiran</th>
@@ -286,22 +273,17 @@
             </div>
         </section>
 
-
         <section id="page-daftarTugas" class="page-content hidden">
             <div class="box">
-
                 <div class="download-buttons">
                     <div class="download-left">
                         <button class="btn-success" onclick="downloadTugasAktif('excel')">
                             <i class="fas fa-file-excel"></i> Excel
                         </button>
-
                         <button class="btn-danger" onclick="downloadTugasAktif('pdf')">
                             <i class="fas fa-file-pdf"></i> PDF
                         </button>
-
-                        <button class="btn-primary" style="background:#64748b;"
-                            onclick="window.printTable('tabelIsiMain', 'tugas')">
+                        <button class="btn-primary" style="background:#64748b;" onclick="window.printTable('tabelIsiMain', 'tugas')">
                             <i class="fas fa-print"></i> Cetak
                         </button>
                     </div>
@@ -310,49 +292,42 @@
                         <button class="btn-success" onclick="downloadTemplateTugasAktif()">
                             <i class="fas fa-download"></i> Template Excel
                         </button>
-
-                        <button id="btnImportTugas" class="btn-primary" style="background:#64748b;"
-                            onclick="document.getElementById('fileImportTugas').click()">
+                        <button id="btnImportTugas" class="btn-primary" style="background:#64748b;" onclick="document.getElementById('fileImportTugas').click()">
                             <i class="fas fa-file-import"></i> Import Excel
                         </button>
                     </div>
-
-                    <input id="fileImportTugas" type="file" accept=".xlsx,.xls" style="display:none"
-                        onchange="importTugasAktifExcel(event)">
+                    <input id="fileImportTugas" type="file" accept=".xlsx,.xls" style="display:none" onchange="importTugasAktifExcel(event)">
                 </div>
-
                 <br>
 
-                <div class="select-group"><label>Pilih Lampiran:</label><select id="lampiranSelect"
-                        onchange="gantiLampiran()"></select></div>
+                <div class="select-group"><label>Pilih Lampiran:</label><select id="lampiranSelect" onchange="gantiLampiran()"></select></div>
 
                 <div id="wrapperAksiTugas" class="hidden" style="margin-top:20px;">
-                    <button class="btn-primary" onclick="window.toggleFormTugas(true)"><i
-                            class="fas fa-plus-circle"></i> Tambah
-                        Data Tugas</button>
+                    <button class="btn-primary" onclick="window.toggleFormTugas(true)"><i class="fas fa-plus-circle"></i> Tambah Data Tugas</button>
                 </div>
 
                 <div id="formIsi" class="hidden entry-form" style="margin-top:20px;">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
                         <h4>Input Detail Tugas</h4>
-                        <button onclick="window.toggleFormTugas(false)" class="btn-close-form"><i
-                                class="fas fa-times"></i>
-                            Tutup</button>
+                        <button onclick="window.toggleFormTugas(false)" class="btn-close-form"><i class="fas fa-times"></i> Tutup</button>
                     </div>
                     <div class="form-grid">
                         <select id="guruSelect" onchange="isiNip()"></select>
                         <input id="nipAuto" readonly class="readonly-input" placeholder="NIP Otomatis">
                         <textarea id="tugasText" placeholder="Rincian tugas..."></textarea>
-                        <button class="btn-save" onclick="tambahIsi()"><i class="fas fa-save"></i> Simpan Ke
-                            Lampiran</button>
+                        <button class="btn-save" onclick="tambahIsi()"><i class="fas fa-save"></i> Simpan Ke Lampiran</button>
                     </div>
+                </div>
+
+                <div class="search-box" style="margin-top: 20px; margin-bottom: 15px;">
+                    <input type="text" id="searchTugas" placeholder="Cari nama atau rincian tugas..." onkeyup="filterTable('tabelIsi', this.value)" style="width: 100%; padding: 12px; border-radius: 10px; border: 1.5px solid #e2e8f0; outline: none; font-family: inherit;">
                 </div>
 
                 <div class="table-container">
                     <table id="tabelIsiMain">
                         <thead>
                             <tr>
-                                <th style="width: 40px;"></th> <!-- Tambahkan ini untuk kolom handle drag -->
+                                <th style="width: 40px;"></th> 
                                 <th>No</th>
                                 <th>Nama</th>
                                 <th>NIP</th>
@@ -363,24 +338,23 @@
                         <tbody id="tabelIsi"></tbody>
                     </table>
                 </div>
-
-
             </div>
         </section>
 
         <section id="page-rekap" class="page-content hidden">
             <div class="box">
-
                 <div class="download-left" style="display: flex; gap: 10px;">
-                    <button class="btn-success" onclick="downloadExcel('tabelRekapMain', 'Rekap_Tugas_Guru')"><i
-                            class="fas fa-file-excel"></i> Excel</button>
-                    <button class="btn-danger" onclick="downloadPDF('tabelRekapMain', 'Rekap_Tugas_Guru')"><i
-                            class="fas fa-file-pdf"></i> PDF</button>
-                    <button class="btn-primary" style="background: #64748b;"
-                        onclick="window.printTable('tabelRekapMain', 'rekap')">
+                    <button class="btn-success" onclick="downloadExcel('tabelRekapMain', 'Rekap_Tugas_Guru')"><i class="fas fa-file-excel"></i> Excel</button>
+                    <button class="btn-danger" onclick="downloadPDF('tabelRekapMain', 'Rekap_Tugas_Guru')"><i class="fas fa-file-pdf"></i> PDF</button>
+                    <button class="btn-primary" style="background: #64748b;" onclick="window.printTable('tabelRekapMain', 'rekap')">
                         <i class="fas fa-print"></i> Cetak
                     </button>
                 </div>
+
+                <div class="search-box" style="margin-top: 20px; margin-bottom: 15px;">
+                    <input type="text" id="searchRekap" placeholder="Cari rincian rekap..." onkeyup="filterTable('tabelRekap', this.value)" style="width: 100%; padding: 12px; border-radius: 10px; border: 1.5px solid #e2e8f0; outline: none; font-family: inherit;">
+                </div>
+
                 <div class="table-container">
                     <table id="tabelRekapMain">
                         <thead>
@@ -398,28 +372,28 @@
                 <div class="ttd-kepsek">
                     <div>Surakarta, <span id="ttdTanggal">-</span></div>
                     <div style="margin-top: 10px;">Kepala Sekolah</div>
-
                     <div class="nama"><span id="ttdNama">-</span></div>
                     <div><span id="ttdGol">-</span></div>
                     <div>NIP. <span id="ttdNip">-</span></div>
                 </div>
-
             </div>
         </section>
+
         <footer class="app-footer">
             © 2026 SINTA – Sistem Informasi Tugas Tambahan | Powered by <strong>SantMedia</strong>
-            <div id="overlay" class="hidden modal-overlay"></div>
+        </footer>
     </div>
-
+    
+    <div id="overlay" class="hidden modal-overlay"></div>
 
     <div id="formEditGuru" class="modal hidden">
         <h4>Edit Profil Guru</h4>
         <input type="hidden" id="editGuruId">
-        <div class="modal-body">
+        <div class="modal-body" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px;">
             <input id="editGuruNama" placeholder="Nama Guru">
             <input id="editGuruNip" placeholder="NIP">
         </div>
-        <div class="modal-btns">
+        <div class="modal-btns" style="display: flex; gap: 10px;">
             <button class="btn-primary" onclick="simpanEditGuru()">Update</button>
             <button class="btn-danger" onclick="batalEditGuru()">Batal</button>
         </div>
@@ -428,10 +402,10 @@
     <div id="formEditLampiran" class="modal hidden">
         <h4>Edit Nama Lampiran</h4>
         <input type="hidden" id="editLampId">
-        <div class="modal-body">
+        <div class="modal-body" style="margin-bottom: 15px;">
             <input id="editLampNama" placeholder="Nama Lampiran">
         </div>
-        <div class="modal-btns">
+        <div class="modal-btns" style="display: flex; gap: 10px;">
             <button class="btn-primary" onclick="simpanEditLampiran()">Update</button>
             <button class="btn-danger" onclick="batalEditLampiran()">Batal</button>
         </div>
@@ -440,19 +414,17 @@
     <div id="formEditIsi" class="modal hidden">
         <h4>Edit Rincian Tugas</h4>
         <input type="hidden" id="editIsiId">
-        <div class="modal-body">
+        <div class="modal-body" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px;">
             <select id="editIsiGuruSelect"></select>
             <textarea id="editIsiTugasText" rows="4"></textarea>
         </div>
-        <div class="modal-btns">
+        <div class="modal-btns" style="display: flex; gap: 10px;">
             <button class="btn-primary" onclick="simpanEditIsi()">Simpan Perubahan</button>
             <button class="btn-danger" onclick="batalEditIsi()">Batal</button>
         </div>
     </div>
 
     <script type="module" src="script.js"></script>
-
-    </footer>
 
 </body>
 
