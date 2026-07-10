@@ -1,7 +1,7 @@
 /* --- IMPORT FONT MODERN --- */
 @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap");
 
-/* --- OPTIMASI FONT & UKURAN (Ganti bagian root/body/table Anda) --- */
+/* --- VARIABEL WARNA & TEMA --- */
 :root {
   --primary: #2563eb;
   --primary-hover: #1d4ed8;
@@ -18,7 +18,7 @@
 /* --- OPTIMASI FONT & UKURAN LAYOUT --- */
 body {
   font-family: "Plus Jakarta Sans", sans-serif;
-  font-size: 13.5px; /* Sedikit dikecilkan agar ringkas tapi sangat nyaman dibaca */
+  font-size: 13.5px;
   margin: 0;
   display: flex;
   height: 100vh;
@@ -27,31 +27,87 @@ body {
   overflow: hidden;
 }
 
-/* Ukuran tabel yang lebih elegan dan proporsional */
+/* --- PENGATURAN TABEL --- */
 table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 13px; 
+  font-size: 13px;
 }
 
 th {
   background: #f8fafc;
   color: var(--text-muted);
   font-weight: 600;
-  padding: 8px 12px; /* Padding lebih rapat dan profesional */
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  padding: 15px 12px;
   text-align: left;
   border-bottom: 2px solid #e2e8f0;
 }
 
 td {
-  padding: 8px 12px; /* Padding sel lebih rapi */
+  padding: 12px;
   border-bottom: 1px solid #e2e8f0;
   color: #334155;
   vertical-align: middle;
+  font-size: 0.95rem;
 }
 
-/* --- STYLE UNTUK DRAG & DROP BARIS TABEL --- */
-tr.draggable-row {
+/* Kolom Nomor rata tengah */
+th:nth-child(2),
+td:nth-child(2) {
+  text-align: center;
+}
+
+.table-container {
+  margin-top: 10px;
+  border-radius: 15px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  border: 1px solid #e2e8f0;
+  -webkit-overflow-scrolling: touch;
+  background: var(--white);
+}
+
+/* --- EMPTY STATE & SEARCH BOX --- */
+.search-box {
+  margin-top: 20px;
+  margin-bottom: 15px;
+}
+
+.search-box input {
+  width: 100%;
+  max-width: 400px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1.5px solid #e2e8f0;
+  outline: none;
+  font-family: inherit;
+  transition: all 0.3s;
+}
+
+.search-box input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.empty-state td {
+  text-align: center;
+  padding: 40px 20px !important;
+  color: #94a3b8;
+  border-bottom: none;
+}
+
+.empty-state i {
+  font-size: 2.5rem;
+  margin-bottom: 12px;
+  display: block;
+  color: #cbd5e1;
+}
+
+/* --- STYLE UNTUK DRAG & DROP --- */
+tr.draggable-row,
+tr.draggable-row-lampiran {
   transition: background 0.2s ease;
 }
 
@@ -74,7 +130,6 @@ tr.dragging {
   color: #2563eb;
 }
 
-/* Indikator visual saat menyeret di atas baris lain */
 tr.drag-over {
   border-top: 2px solid #2563eb;
 }
@@ -120,7 +175,7 @@ tr.drag-over {
   flex: 1;
   padding: 10px;
   min-height: 0;
-  overflow-y: auto; /* ✅ nav bisa scroll */
+  overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
 
@@ -142,12 +197,13 @@ tr.drag-over {
   background: var(--sidebar-hover);
   color: white;
 }
+
 .sidebar-item.active {
   background: var(--primary);
   box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
 }
 
-/* --- ADMIN PROFILE --- */
+/* --- ADMIN PROFILE & LOGIN --- */
 .auth-box {
   padding: 20px;
   padding-bottom: 30px;
@@ -180,6 +236,7 @@ tr.drag-over {
   flex-direction: column;
   min-width: 0;
 }
+
 .user-status {
   font-size: 0.65rem;
   color: var(--success);
@@ -204,6 +261,7 @@ tr.drag-over {
   border-radius: 10px;
   font-weight: 600;
   cursor: pointer;
+  transition: all 0.2s;
 }
 
 .btn-logout:hover {
@@ -211,12 +269,13 @@ tr.drag-over {
   color: white;
 }
 
-/* --- MAIN CONTENT --- */
+/* --- MAIN CONTENT & HEADER --- */
 .main-content {
   flex: 1;
   overflow-y: auto;
-  padding: 40px;
+  padding: 30px;
 }
+
 .box {
   background: var(--white);
   padding: 30px;
@@ -224,35 +283,64 @@ tr.drag-over {
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
-/* --- TABLES & ACTIONS --- */
-.table-container {
-  margin-top: 20px;
+.main-header {
+  background: #ffffff;
+  padding: 16px 30px;
+  border-bottom: 1px solid #e2e8f0;
+  margin-bottom: 25px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
   border-radius: 15px;
-  overflow-x: auto;
-  overflow-y: hidden;
-  border: 1px solid #f1f5f9;
-  -webkit-overflow-scrolling: touch;
-}
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-th {
-  background: #f8fafc;
-  color: var(--text-muted);
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  padding: 18px;
-  text-align: left;
-}
-td {
-  padding: 18px;
-  border-bottom: 1px solid #f1f5f9;
-  font-size: 0.95rem;
-  vertical-align: middle;
 }
 
-/* Bagian agar tombol edit/hapus berjajar */
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#pageTitle {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: opacity 0.2s ease;
+}
+
+.header-icon-title {
+  color: var(--primary);
+  font-size: 1.25rem;
+  background: rgba(37, 99, 235, 0.08);
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.date-now-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  padding: 8px 14px;
+  border-radius: 10px;
+  color: #475569;
+  font-size: 12.5px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.01);
+}
+
+.date-now-box i {
+  color: #64748b;
+  font-size: 13px;
+}
+
+/* --- BADGES & BUTTONS --- */
 .action-buttons {
   display: flex !important;
   gap: 8px;
@@ -268,10 +356,7 @@ td {
   font-weight: 600;
 }
 
-/* --- BUTTONS --- */
-.btn-primary {
-  background: var(--primary);
-  color: white;
+.btn-primary, .btn-danger, .btn-success {
   border: none;
   padding: 10px 14px;
   border-radius: 8px;
@@ -280,30 +365,23 @@ td {
   align-items: center;
   justify-content: center;
   transition: 0.2s;
-}
-.btn-danger {
-  background: #fee2e2;
-  color: var(--danger);
-  border: none;
-  padding: 10px 14px;
-  border-radius: 8px;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: 0.2s;
-}
-.btn-primary:hover {
-  background: var(--primary-hover);
-  transform: translateY(-1px);
-}
-.btn-danger:hover {
-  background: var(--danger);
-  color: white;
-  transform: translateY(-1px);
+  font-weight: 600;
+  gap: 6px;
 }
 
-/* --- FORMS (MANAJEMEN GURU BERJAJAR) --- */
+.btn-primary { background: var(--primary); color: white; }
+.btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); }
+
+.btn-danger { background: #fee2e2; color: var(--danger); }
+.btn-danger:hover { background: var(--danger); color: white; transform: translateY(-1px); }
+
+.btn-success { background: var(--success); color: white; }
+.btn-success:hover { background: #059669; transform: translateY(-1px); }
+
+.btn-muted { background: #64748b; }
+.btn-muted:hover { background: #475569; }
+
+/* --- FORMS --- */
 .entry-form {
   background: #ffffff;
   padding: 25px;
@@ -312,18 +390,17 @@ td {
   margin-bottom: 25px;
 }
 
-/* Grid default untuk form lain */
 .form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 15px;
 }
+
 .form-grid textarea,
-.btn-save {
+.form-grid .btn-save {
   grid-column: span 2;
 }
 
-/* Form Khusus Tambah Guru Agar Berjajar Horizontal */
 .input-row {
   display: flex;
   gap: 12px;
@@ -331,26 +408,24 @@ td {
   width: 100%;
 }
 
-/* Memastikan input tidak memaksa 100% lebar selagi di dalam flexbox */
 .input-row input {
-  flex: 1; /* Nama dan NIP bagi rata sisa ruang */
+  flex: 1;
   min-width: 0;
 }
 
-.input-row .btn-primary {
-  white-space: nowrap;
-  padding: 12px 20px;
-}
-
-input,
-select,
-textarea {
+input, select, textarea {
   width: 100%;
   padding: 12px;
   border: 1.5px solid #e2e8f0;
   border-radius: 10px;
   outline: none;
   font-family: inherit;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--primary);
 }
 
 .btn-save {
@@ -362,6 +437,7 @@ textarea {
   border-radius: 12px;
   cursor: pointer;
 }
+
 .btn-close-form {
   background: none;
   border: none;
@@ -372,423 +448,7 @@ textarea {
   gap: 5px;
 }
 
-/* --- MODAL SYSTEM --- */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(15, 23, 42, 0.6);
-  z-index: 2000;
-  backdrop-filter: blur(4px);
-}
-
-.modal {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: white;
-  padding: 30px;
-  border-radius: 24px;
-  z-index: 2001;
-  width: 90%;
-  max-width: 480px;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-}
-
-/* --- UTILITIES --- */
-.hidden {
-  display: none !important;
-}
-
-@media (max-width: 1024px) {
-  .sidebar {
-    position: fixed;
-    left: -280px;
-  }
-  .sidebar.active {
-    left: 0;
-  }
-  .main-content {
-    padding: 80px 20px 20px;
-  }
-  .input-row {
-    flex-direction: column;
-    align-items: stretch;
-  } /* Di HP tetap tumpuk agar tidak sempit */
-}
-
-/* download */
-.btn-success {
-  background: var(--success);
-  color: white;
-  border: none;
-  padding: 10px 16px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  transition: 0.2s;
-}
-
-.btn-success:hover {
-  background: #059669;
-  transform: translateY(-1px);
-}
-/* --- LOGIN BOX BEAUTIFICATION --- */
-.login-container {
-  padding: 10px;
-}
-
-.login-header {
-  margin-bottom: 20px;
-}
-
-.login-header h4 {
-  margin: 0;
-  color: #f8fafc;
-  font-size: 1.1rem;
-  font-weight: 700;
-}
-
-.login-header p {
-  margin: 5px 0 0;
-  font-size: 0.75rem;
-  color: #94a3b8;
-}
-
-.input-group-auth {
-  margin-bottom: 15px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.input-group-auth label {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: #cbd5e1;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.input-group-auth input {
-  background: rgba(15, 23, 42, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: white;
-  padding: 12px 15px;
-  border-radius: 12px;
-  font-size: 0.85rem;
-  transition: all 0.3s ease;
-}
-
-.input-group-auth input:focus {
-  border-color: var(--primary);
-  background: rgba(15, 23, 42, 0.8);
-  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.2);
-}
-
-.btn-login-new {
-  width: 100%;
-  padding: 12px;
-  background: var(--primary);
-  color: white;
-  border: none;
-  border-radius: 12px;
-  font-weight: 700;
-  font-size: 0.9rem;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  transition: all 0.3s ease;
-  margin-top: 10px;
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
-}
-
-.btn-login-new:hover {
-  background: var(--primary-hover);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(37, 99, 235, 0.4);
-}
-
-.btn-login-new:active {
-  transform: translateY(0);
-}
-
-.login-footer {
-  margin-top: 20px;
-  font-size: 0.65rem;
-  color: #64748b;
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-}
-
-@media print {
-  /* Margin lebih lebar di kiri untuk kebutuhan jilid */
-  @page {
-    margin: 20mm 18mm 20mm 32mm;
-  }
-
-  .sidebar,
-  .mobile-menu-btn,
-  .download-buttons,
-  #formIsi,
-  #formLampiran,
-  .action-buttons,
-  .auth-box,
-  #formGuru {
-    display: none !important;
-  }
-  .main-content {
-    padding-top: 20mm !important;
-    margin: 0 !important;
-  }
-
-  .box {
-    box-shadow: none !important;
-    padding: 0 !important;
-  }
-}
-
-/* --- UPDATE HAMBURGER BUTTON --- */
-.mobile-menu-btn {
-  display: none; /* Sembunyi secara default di desktop */
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  width: 45px;
-  height: 45px;
-  background: var(--primary);
-  color: white;
-  border: none;
-  border-radius: 12px;
-  font-size: 1.2rem;
-  z-index: 2005; /* Di atas sidebar overlay */
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-}
-
-.mobile-menu-btn:hover {
-  transform: scale(1.05);
-  background: var(--primary-hover);
-}
-
-/* --- SIDEBAR OVERLAY --- */
-.sidebar-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(15, 23, 42, 0.5);
-  backdrop-filter: blur(4px);
-  z-index: 1001; /* Tepat di bawah sidebar */
-  transition: opacity 0.3s ease;
-}
-
-.sidebar-overlay.active {
-  display: block;
-}
-
-/* --- RESPONSIVE ADJUSTMENTS --- */
-@media (max-width: 1024px) {
-  .mobile-menu-btn {
-    display: flex; /* Tampilkan di HP/Tablet */
-  }
-
-  .sidebar {
-    position: fixed;
-    left: -280px; /* Sembunyi di luar layar */
-    height: 100dvh;
-    z-index: 1002;
-    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.1);
-  }
-
-  .sidebar.active {
-    left: 0;
-  }
-
-  .main-content {
-    padding: 85px 15px 20px; /* Ruang ekstra untuk tombol di atas */
-  }
-}
-
-.ttd-kepsek {
-  width: 300px;
-  margin-left: auto;
-  margin-top: 40px;
-  text-align: left;
-  font-family: "Times New Roman", Times, serif;
-  font-size: 11pt;
-  line-height: 1.5;
-}
-
-.ttd-kepsek .nama {
-  margin-top: 70px;
-  font-weight: bold;
-  text-decoration: underline;
-}
-
-/* --- IMPORT/EXPORT CONTROLS (DATA GURU) --- */
-.import-row {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  flex-wrap: wrap;
-  margin-top: 12px;
-}
-
-.btn-muted {
-  background: #64748b;
-}
-
-.btn-muted:hover {
-  background: #475569;
-  transform: translateY(-1px);
-}
-
-.import-hint {
-  margin-top: 8px;
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  line-height: 1.35;
-}
-/* === FOOTER APLIKASI === */
-.app-footer {
-  text-align: center;
-  padding: 12px 10px;
-  font-size: 0.75rem;
-  color: #64748b;
-  background: #f8fafc;
-  border-top: 1px solid #e2e8f0;
-  margin-top: 30px;
-}
-
-/* footer tidak ikut tercetak */
-@media print {
-  .app-footer {
-    display: none !important;
-  }
-}
-
-/* --- MOBILE: IDENTITAS FORM & TABLE SCROLL --- */
-@media (max-width: 768px) {
-  /* Identitas view (2 kolom -> 1 kolom) */
-  #viewIdentitas {
-    grid-template-columns: 1fr !important;
-    gap: 16px !important;
-  }
-
-  /* Form edit identitas (2 kolom -> 1 kolom) */
-  #formIdentitas .form-grid {
-    grid-template-columns: 1fr !important;
-  }
-
-  #formIdentitas .form-grid textarea,
-  #formIdentitas .form-grid .btn-save {
-    grid-column: span 1 !important;
-  }
-
-  #formIdentitas .form-actions {
-    grid-column: span 1 !important;
-    flex-direction: column;
-  }
-
-  #formIdentitas .form-actions button {
-    width: 100%;
-  }
-
-  /* Table: bisa digeser kiri-kanan di HP */
-  .table-container table {
-    min-width: 680px; /* memicu horizontal scroll saat layar sempit */
-  }
-
-  th,
-  td {
-    padding: 12px;
-  }
-}
-.download-buttons {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.download-left,
-.download-right {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
-/* Pastikan grup kanan selalu nempel kanan */
-.download-right {
-  margin-left: auto;
-}
-
-/* Responsive HP: jika kepanjangan, grup kanan turun ke bawah tapi tetap rata kanan */
-@media (max-width: 600px) {
-  .download-right {
-    width: 100%;
-    justify-content: flex-end;
-    gap: 8px;
-  }
-
-  .download-right button {
-    flex: 1 1 48%;
-    text-align: center;
-    white-space: nowrap;
-  }
-}
-/* Tombol ringkas sebelum login */
-.btn-login-toggle {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(15, 23, 42, 0.35);
-  color: #f8fafc;
-  border-radius: 12px;
-  font-weight: 700;
-  cursor: pointer;
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  justify-content: center;
-}
-
-.btn-login-toggle:hover {
-  border-color: rgba(255, 255, 255, 0.18);
-  background: rgba(15, 23, 42, 0.55);
-}
-
-/* Panel form: default tertutup */
-.login-panel {
-  overflow: hidden;
-  max-height: 0;
-  opacity: 0;
-  transform: translateY(-4px);
-  transition: max-height 0.28s ease, opacity 0.2s ease, transform 0.28s ease;
-}
-
-/* Panel form: terbuka */
-.login-panel.active {
-  max-height: 420px; /* cukup untuk isi form */
-  opacity: 1;
-  transform: translateY(0);
-  margin-top: 12px;
-}
-/* --- GAYA KHUSUS HALAMAN IDENTITAS --- */
+/* --- IDENTITAS CARDS --- */
 .identitas-card {
   background: #ffffff;
   border: 1px solid #e2e8f0;
@@ -814,11 +474,6 @@ textarea {
   gap: 10px;
 }
 
-.identitas-card .card-title i {
-  color: var(--primary);
-  font-size: 14px;
-}
-
 .identitas-card .card-body-info {
   padding: 8px 18px;
 }
@@ -835,25 +490,10 @@ textarea {
   border-bottom: none;
 }
 
-.info-label {
-  color: #64748b;
-  font-weight: 500;
-  font-size: 13px;
-}
+.info-label { color: #64748b; font-weight: 500; font-size: 13px; }
+.info-value { color: #1e293b; font-weight: 600; font-size: 13.5px; text-align: right; }
+.info-value.text-bold { color: #0f172a; font-weight: 700; }
 
-.info-value {
-  color: #1e293b;
-  font-weight: 600;
-  font-size: 13.5px;
-  text-align: right;
-}
-
-.info-value.text-bold {
-  color: #0f172a;
-  font-weight: 700;
-}
-
-/* Badge khusus untuk NIP di pratinjau kartu */
 .nip-badge-preview {
   background: #f0fdf4;
   color: #16a34a;
@@ -865,89 +505,141 @@ textarea {
   letter-spacing: 0.5px;
 }
 
-/* Form Input Group Custom */
-.input-group-custom {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+.input-group-custom { display: flex; flex-direction: column; gap: 6px; }
+.input-group-custom label { font-size: 12px; font-weight: 600; color: #475569; display: flex; align-items: center; gap: 6px; }
+
+/* --- MODALS --- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+  z-index: 2000;
+  backdrop-filter: blur(4px);
 }
 
-.input-group-custom label {
-  font-size: 12px;
-  font-weight: 600;
-  color: #475569;
-  display: flex;
-  align-items: center;
-  gap: 6px;
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 30px;
+  border-radius: 24px;
+  z-index: 2001;
+  width: 90%;
+  max-width: 480px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 }
 
-.input-group-custom input {
-  background: #ffffff;
-  border: 1.5px solid #e2e8f0;
-  padding: 10px 14px;
-  font-size: 13px;
-  transition: all 0.2s;
+.modal h4 { margin-top: 0; margin-bottom: 20px; font-size: 1.2rem; }
+.modal-body { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+.modal-btns { display: flex; gap: 10px; justify-content: flex-end; }
+
+/* --- LOGIN PANEL --- */
+.login-container { padding: 10px; }
+.login-header { margin-bottom: 20px; }
+.login-header h4 { margin: 0; color: #f8fafc; font-size: 1.1rem; font-weight: 700; }
+.login-header p { margin: 5px 0 0; font-size: 0.75rem; color: #94a3b8; }
+.input-group-auth { margin-bottom: 15px; display: flex; flex-direction: column; gap: 8px; }
+.input-group-auth label { font-size: 0.75rem; font-weight: 600; color: #cbd5e1; display: flex; align-items: center; gap: 8px; }
+.input-group-auth input {
+  background: rgba(15, 23, 42, 0.5); border: 1px solid rgba(255, 255, 255, 0.1); color: white;
+  padding: 12px 15px; border-radius: 12px; font-size: 0.85rem; transition: all 0.3s ease;
+}
+.input-group-auth input:focus {
+  border-color: var(--primary); background: rgba(15, 23, 42, 0.8); box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.2);
 }
 
-.input-group-custom input:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+.btn-login-toggle {
+  width: 100%; padding: 12px; border: 1px solid rgba(255, 255, 255, 0.12); background: rgba(15, 23, 42, 0.35);
+  color: #f8fafc; border-radius: 12px; font-weight: 700; cursor: pointer; display: flex; gap: 10px; align-items: center; justify-content: center;
 }
-/* --- GAYA BARU UNTUK MAIN HEADER --- */
-.main-header {
-  background: #ffffff;
-  padding: 16px 30px;
-  border-bottom: 1px solid #e2e8f0;
-  margin-bottom: 25px;
-  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
+.btn-login-toggle:hover { border-color: rgba(255, 255, 255, 0.18); background: rgba(15, 23, 42, 0.55); }
+
+.login-panel {
+  overflow: hidden; max-height: 0; opacity: 0; transform: translateY(-4px);
+  transition: max-height 0.28s ease, opacity 0.2s ease, transform 0.28s ease;
+}
+.login-panel.active { max-height: 420px; opacity: 1; transform: translateY(0); margin-top: 12px; }
+
+.btn-login-new {
+  width: 100%; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 12px;
+  font-weight: 700; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  gap: 10px; transition: all 0.3s ease; margin-top: 10px; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+.btn-login-new:hover { background: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 6px 15px rgba(37, 99, 235, 0.4); }
+.login-footer { margin-top: 20px; font-size: 0.65rem; color: #64748b; text-align: center; display: flex; align-items: center; justify-content: center; gap: 6px; }
+
+
+/* --- UTILITIES & LAYOUT KHUSUS --- */
+.hidden { display: none !important; }
+
+.download-buttons { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.download-left, .download-right { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.download-right { margin-left: auto; }
+
+.import-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 12px; }
+.import-hint { margin-top: 8px; font-size: 0.75rem; color: var(--text-muted); line-height: 1.35; }
+
+.ttd-kepsek {
+  width: 300px; margin-left: auto; margin-top: 40px; text-align: left;
+  font-family: "Times New Roman", Times, serif; font-size: 11pt; line-height: 1.5;
+}
+.ttd-kepsek .nama { margin-top: 70px; font-weight: bold; text-decoration: underline; }
+
+.app-footer {
+  text-align: center; padding: 12px 10px; font-size: 0.75rem; color: #64748b;
+  background: #f8fafc; border-top: 1px solid #e2e8f0; margin-top: 30px;
 }
 
-.header-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+/* --- RESPONSIVE ADJUSTMENTS --- */
+.mobile-menu-btn {
+  display: none; position: fixed; top: 20px; left: 20px; width: 45px; height: 45px;
+  background: var(--primary); color: white; border: none; border-radius: 12px;
+  font-size: 1.2rem; z-index: 2005; cursor: pointer; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  align-items: center; justify-content: center; transition: all 0.3s ease;
+}
+.mobile-menu-btn:hover { transform: scale(1.05); background: var(--primary-hover); }
+
+.sidebar-overlay {
+  display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(4px); z-index: 1001; transition: opacity 0.3s ease;
+}
+.sidebar-overlay.active { display: block; }
+
+@media (max-width: 1024px) {
+  .mobile-menu-btn { display: flex; }
+  .sidebar { position: fixed; left: -280px; height: 100dvh; z-index: 1002; box-shadow: 10px 0 30px rgba(0, 0, 0, 0.1); }
+  .sidebar.active { left: 0; }
+  .main-content { padding: 85px 15px 20px; }
+  .input-row { flex-direction: column; align-items: stretch; }
 }
 
-#pageTitle {
-  margin: 0;
-  font-size: 1.35rem;
-  font-weight: 700;
-  color: #0f172a;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  transition: opacity 0.2s ease; /* Digunakan untuk efek fade di javascript */
+@media (max-width: 768px) {
+  #viewIdentitas { grid-template-columns: 1fr !important; gap: 16px !important; }
+  #formIdentitas .form-grid { grid-template-columns: 1fr !important; }
+  #formIdentitas .form-grid textarea, #formIdentitas .form-grid .btn-save { grid-column: span 1 !important; }
+  #formIdentitas .form-actions { grid-column: span 1 !important; flex-direction: column; }
+  #formIdentitas .form-actions button { width: 100%; }
+  .table-container table { min-width: 680px; }
 }
 
-/* Icon dinamis di sebelah judul halaman */
-.header-icon-title {
-  color: var(--primary);
-  font-size: 1.25rem;
-  background: rgba(37, 99, 235, 0.08);
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+@media (max-width: 600px) {
+  .download-right { width: 100%; justify-content: flex-end; gap: 8px; }
+  .download-right button { flex: 1 1 48%; text-align: center; white-space: nowrap; }
 }
 
-/* Desain widget box penunjuk tanggal hari ini */
-.date-now-box {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  padding: 8px 14px;
-  border-radius: 10px;
-  color: #475569;
-  font-size: 12.5px;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.01);
-}
+/* --- PENGATURAN CETAK (PRINT) DARI BROWSER --- */
+@media print {
+  @page { margin: 20mm 18mm 20mm 32mm; }
 
-.date-now-box i {
-  color: #64748b;
-  font-size: 13px;
+  /* Sembunyikan elemen UI yang tidak perlu saat cetak */
+  .sidebar, .mobile-menu-btn, .download-buttons, #formIsi, #formLampiran, 
+  .action-buttons, .auth-box, .search-box, #formGuru, .app-footer, .main-header {
+    display: none !important;
+  }
+  
+  .main-content { padding-top: 0 !important; margin: 0 !important; overflow: visible; }
+  .box { box-shadow: none !important; padding: 0 !important; }
+  .table-container { border: none !important; overflow: visible !important; }
 }
